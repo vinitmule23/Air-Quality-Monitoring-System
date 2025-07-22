@@ -1,0 +1,57 @@
+#include <Wire.h> 
+#include <LiquidCrystal_I2C.h>
+
+// Set the LCD address to 0x27 for a 16 chars and 2 line display
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+#include <DFRobot_DHT11.h>
+DFRobot_DHT11 DHT;
+#define DHT11_PIN 10
+int pushButton = 2;
+void setup(){
+  Serial.begin(115200);
+  	// initialize the LCD
+	lcd.begin();
+
+	// Turn on the blacklight and print a message.
+	lcd.backlight();
+    pinMode(pushButton, INPUT);
+}
+
+void loop(){
+  DHT.read(DHT11_PIN);
+  Serial.print("temp:");
+  Serial.print(DHT.temperature);
+  Serial.print("  humi:");
+  Serial.println(DHT.humidity);
+  lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Temp= ");
+      lcd.print(DHT.temperature);
+      lcd.print("oC");
+      lcd.setCursor(0,1);
+      lcd.print("Humidity= ");
+      lcd.print(DHT.humidity);
+
+  delay(1500);
+    int buttonState = digitalRead(pushButton);
+  // print out the state of the button:
+  Serial.println(buttonState);
+  if(buttonState==0)
+  {
+
+    lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Air Quality = ");
+      lcd.print("Good");
+delay(1500);
+  }
+  else
+  {
+
+    lcd.clear();
+      lcd.setCursor(0,0);
+      lcd.print("Air Quality=");
+      lcd.print("Not Good");
+delay(1500);
+  }
+}
